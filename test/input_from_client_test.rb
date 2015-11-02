@@ -27,6 +27,11 @@ class InputFromClientTest < Minitest::Test
     assert_equal tcp_server, input.client
   end
 
+  def test_responds_to_read_request
+    input = InputFromClient.new
+    assert input.respond_to?(:read_request)
+  end
+
 end
 
 # listens on port 9292

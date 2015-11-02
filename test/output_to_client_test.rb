@@ -14,11 +14,23 @@ class OutputToClientTest < Minitest::Test
     assert_equal [], output.from_machine
   end
 
+  def test_can_initialize_with_array_from_machine
+    output = OutputToClient.new([1,2,3])
+
+    assert_equal [1,2,3], output.from_machine
+  end
+
   def test_initializes_with_client_server_output
     tcp_server = TCPServer.new(9292)
-    output = InputFromClient.new(tcp_server)
+    output = OutputToClient.new([],tcp_server)
 
     assert_equal tcp_server, output.client
+  end
+
+  def test_responds_to_write_request
+    output = OutputToClient.new
+
+    assert output.respond_to?(:write_request_to_browser)
   end
 
 end

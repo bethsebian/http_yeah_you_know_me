@@ -14,12 +14,18 @@ class MachineTest < Minitest::Test
     assert_equal [], machine.output
   end
 
+  def test_can_initialize_with_inputs_and_outputs
+    machine = Machine.new([1,2,3],["h","e"])
+
+    assert_equal [1,2,3], machine.input
+    assert_equal ["h","e"], machine.output
+  end
+
 
   def test_responds_to_process_request
     machine = Machine.new
 
     assert machine.respond_to?(:process_request)
-
   end
 
 end

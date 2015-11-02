@@ -10,7 +10,7 @@ class InputFromClient
     client.accept
   end
 
-  def process_request
+  def read_request
     channel = accept_request
     while line = channel.gets and !line.chomp.empty?
       request_lines << line.chomp

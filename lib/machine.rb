@@ -8,8 +8,6 @@ class Machine
   end
 
 
-
-
   def process_request
     # starts with @input, does a bunch of stuff
     # finishes with @output = transformed input
