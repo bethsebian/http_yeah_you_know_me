@@ -9,7 +9,6 @@ class OutputToClient
   end
 
   def write_request_to_browser
-    channel = client.accept
     response = "<pre>" + from_machine.join("\n") + "</pre>"
     output = "<html><head></head><body>#{response}</body></html>"
     headers = ["http/1.1 200 ok",
@@ -17,9 +16,8 @@ class OutputToClient
               "server: ruby",
               "content-type: text/html; charset=iso-8859-1",
               "content-length: #{output.length}\r\n\r\n"].join("\r\n")
-    channel.puts headers
-    channel.puts output
-    channel.close
+    client.puts headers
+    client.puts output
   end
   # puts "Got this request:"
   # puts request_lines.inspect

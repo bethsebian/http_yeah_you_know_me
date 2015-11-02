@@ -9,11 +9,9 @@ class InputFromClient
   end
 
   def read_request
-    channel = client.accept
-    while line = channel.gets and !line.chomp.empty?
+    while line = client.gets and !line.chomp.empty?
       @to_machine << line.chomp
     end
-    channel.close
   end
 
 end
