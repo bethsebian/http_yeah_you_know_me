@@ -15,12 +15,12 @@ class InputFromClientTest < Minitest::Test
   end
 
   def test_initializes_with_client_server_input
-    skip
     tcp_server = TCPServer.new(9292)
     input = InputFromClient.new(tcp_server)
 
-    assert_equal tcp_server.accept, input.client
+    assert_equal tcp_server, input.client
   end
+
 end
 
 # listens on port 9292
