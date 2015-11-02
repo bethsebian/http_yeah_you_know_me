@@ -3,8 +3,8 @@ require 'pry'
 class InputFromClient
   attr_reader :client, :to_machine
 
-  def initialize(tcp_server=:no_client)
-    @client = tcp_server
+  def initialize(client=:no_client)
+    @client = client
     @to_machine = []
   end
 
