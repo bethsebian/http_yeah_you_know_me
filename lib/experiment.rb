@@ -1,4 +1,5 @@
 require 'socket'
+require 'pry'
 tcp_server = TCPServer.new(9292)
 client = tcp_server.accept
 
@@ -12,7 +13,7 @@ puts "Got this request:"
 puts request_lines.inspect
 
 puts "Sending response."
-response = "<pre>" + request_lines.join("\n") + "</pre>"
+response = "<pre>" + request_lines.join("\n") + "\n\nTHIS IS A TEST!!!!!!!!!!!" + "</pre>"
 output = "<html><head></head><body>#{response}</body></html>"
 headers = ["http/1.1 200 ok",
           "date: #{Time.now.strftime('%a, %e %b %Y %H:%M:%S %z')}",
@@ -23,5 +24,5 @@ client.puts headers
 client.puts output
 
 puts ["Wrote this response:", headers, output].join("\n")
-client.close 
+client.close
 puts "\nResponse complete, exiting."
