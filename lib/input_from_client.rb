@@ -1,3 +1,5 @@
+require 'pry'
+
 class InputFromClient
   attr_reader :client, :to_machine
 
@@ -6,17 +8,12 @@ class InputFromClient
     @to_machine = []
   end
 
-  def accept_request
-    client.accept
-  end
-
   def read_request
-    channel = accept_request
+    channel = client.accept
     while line = channel.gets and !line.chomp.empty?
-      request_lines << line.chomp
+      @to_machine << line.chomp
     end
-    @to_machine = request_lines
+    channel.close
   end
-
 
 end
