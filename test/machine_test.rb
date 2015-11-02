@@ -1,24 +1,25 @@
 require 'minitest/autorun'
-require_relative '../lib/output_to_client'
+require_relative '../lib/machine'
 require 'socket'
 
-class OutputToClientTest < Minitest::Test
+class MachineTest < Minitest::Test
 
   def test_input_from_client_exists
-    assert OutputToClient
+    assert Machine
   end
 
-  def test_initializes_with_nothing_from_machine
-    output = OutputToClient.new
-
-    assert_equal [], output.from_machine
+  def test_initializes_with_input_and_output_empty
+    machine = Machine.new
+    assert_equal [], machine.input
+    assert_equal [], machine.output
   end
 
-  def test_initializes_with_client_server_output
-    tcp_server = TCPServer.new(9292)
-    output = InputFromClient.new(tcp_server)
 
-    assert_equal tcp_server, output.client
+  def test_responds_to_process_request
+    machine = Machine.new
+
+    assert machine.respond_to?(:process_request)
+
   end
 
 end
