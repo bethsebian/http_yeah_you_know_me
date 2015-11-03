@@ -27,9 +27,9 @@ class Executable
   end
 
   def process_single_request
-    input = input_from_client
-    m = Machine.new
-    output = m.process_request(input,counter,hello_counter)
+    to_machine = input_from_client
+    m = Machine.new(to_machine)
+    output = m.process_request(counter,hello_counter)
     output_response_to_client(output)
   end
 
