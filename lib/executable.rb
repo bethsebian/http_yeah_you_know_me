@@ -64,8 +64,6 @@ class Executable
     client.close
   end
 
-
-
   def iteration_1
       input = input_from_client
       output = prepare_iteration_1(input)
