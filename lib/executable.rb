@@ -11,8 +11,9 @@ class Executable
   def initialize(port)
     @tcp_server = TCPServer.new(port)
     @client = tcp_server.accept
-    @counter = 0
-    @hello_counter = 0
+    @counter = 1
+    @hello_counter = 1
+    @machine = Machine.new([])
   end
 
   def input_from_client
@@ -26,18 +27,19 @@ class Executable
     client_friendly_output.write_request_to_browser
   end
 
-  def process_single_request
-    to_machine = input_from_client
-    m = Machine.new(to_machine)
-    output = m.process_request(counter,hello_counter)
-    output_response_to_client(output)
-  end
-
   def process_many_requests
     loop do
-      process_single_request
+      to_machine = input_from_client
+      m = Machine.new(to_machine)
+      parse = Parser.new(to_machine)
+      output = m.process_request(counter,hello_counter)
+      output_response_to_client(output)
+      if parse.path == "/hello"
+        @hello_counter += 1
+      elsif parse.path == "/shutdown"
+        break
+      end
       @counter += 1
-      # will need to add parser.path to trigger shutdown
     end
     client.close
   end
