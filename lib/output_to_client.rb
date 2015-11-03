@@ -1,10 +1,10 @@
 require_relative 'executable.rb'
 
-class OutputToClient < Executable
+class OutputToClient
 
   attr_accessor :from_machine, :client
 
-  def initialize(from_machine = [], client)
+  def initialize(from_machine = [], client = :no_client)
     @from_machine = from_machine
     @client = client
   end

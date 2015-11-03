@@ -2,16 +2,11 @@ require 'socket'
 require 'pry'
 require_relative 'input_from_client'
 require_relative 'output_to_client'
-require_relative 'iteration_0'
-require_relative 'prep_iter_0'
-require_relative 'iteration_1'
-require_relative 'iteration_2'
-require_relative 'prepare_iteration'
-
+require_relative 'machine'
 
 class Executable
 
-  attr_accessor :client, :counter, :tcp_server
+  attr_accessor :client, :counter, :tcp_server, :hello_counter
 
   def initialize(port)
     @tcp_server = TCPServer.new(port)
@@ -31,39 +26,18 @@ class Executable
     client_friendly_output.write_request_to_browser
   end
 
-  def prepare_iteration_x(num, counter, input)
-    prep = PrepareIteration.new(num,counter,input)
-    prep.iteration_prep
+  def process_single_request
+    input = input_from_client
+    m = Machine.new
+    output = m.process_request(input,counter,hello_counter)
+    output_response_to_client(output)
   end
 
-  def iteration_0
+  def process_many_requests
     loop do
-      self.counter += 1
-      input = input_from_client
-      output = prepare_iteration_x(0, counter, input)
-      output_response_to_client(output)
-    end
-    client.close
-  end
-
-  def iteration_1
-      input = input_from_client
-      output = prepare_iteration_x(1, counter, input)
-      output_response_to_client(output)
-    client.close
-  end
-
-  def iteration_2
-    loop do
-      self.counter += 1
-      input = input_from_client
-      output = prepare_iteration_x(2, counter, input)
-      output_response_to_client(output)
-      if output.shift == "hello"
-        self.hello_counter += 1
-      elsif output.shift == "shutdown"
-       break
-      end
+      process_single_request
+      @counter += 1
+      # will need to add parser.path to trigger shutdown
     end
     client.close
   end
@@ -71,5 +45,5 @@ end
 
 if __FILE__ == $0
   executor = Executable.new(9292)
-  executor.iteration_2
+  executor.process_many_requests
 end

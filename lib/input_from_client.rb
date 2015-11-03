@@ -15,3 +15,10 @@ class InputFromClient
   end
 
 end
+
+class Parser
+
+
+
+
+end
