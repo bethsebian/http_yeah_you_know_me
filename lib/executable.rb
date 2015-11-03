@@ -3,6 +3,7 @@ require 'pry'
 require_relative 'input_from_client'
 require_relative 'output_to_client'
 require_relative 'iteration_0'
+require_relative 'prep_iter_0'
 
 class Executable
 
@@ -26,9 +27,7 @@ class Executable
   end
 
   def prepare_iteration_0(counter = @counter)
-    machine = Iteration_0.new(counter)
-    machine.process_request
-    machine.output
+    PrepIter0.new(counter).output
   end
 
   def iteration_0
