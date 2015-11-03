@@ -10,7 +10,7 @@ class Iteration_0
   end
 
   def process_request
-    @output = ["Hello, World! (#{@counter})"]
+    @output = ["Hello"] +[" World! (#{@counter})"]
   end
 
 end

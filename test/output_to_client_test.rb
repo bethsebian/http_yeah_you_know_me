@@ -29,7 +29,6 @@ class OutputToClientTest < Minitest::Test
 
   def test_responds_to_write_request
     output = OutputToClient.new
-
     assert output.respond_to?(:write_request_to_browser)
   end
 

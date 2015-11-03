@@ -6,6 +6,8 @@ require_relative 'iteration_0'
 require_relative 'prep_iter_0'
 require_relative 'iteration_1'
 require_relative 'iteration_2'
+require_relative 'prepare_iteration'
+
 
 class Executable
 
@@ -15,7 +17,7 @@ class Executable
     @tcp_server = TCPServer.new(port)
     @client = tcp_server.accept
     @counter = 0
-
+    @hello_counter = 0
   end
 
   def input_from_client
@@ -29,36 +31,16 @@ class Executable
     client_friendly_output.write_request_to_browser
   end
 
-  def prepare_iteration_0(counter = @counter)
-    PrepIter0.new(counter).output
+  def prepare_iteration_x(num, counter, input)
+    prep = PrepareIteration.new(num,counter,input)
+    prep.iteration_prep
   end
-
-  def prepare_iteration_1(input)
-    machine = Iteration_1.new(input)
-    machine.process_request
-    machine.output
-  end
-
-  def prepare_iteration_2(input, counter = @counter)
-    machine = Iteration_2.new(counter, input)
-    machine.process_request
-    machine.output
-  end
-
-
-  # def iterations
-  #   {0 => lambda{ prepare_iteration_0 } }
-  # end
-  #
-  # def process_with_iteration_x(num)
-  #   iterations[num].call
-  # end
 
   def iteration_0
     loop do
       self.counter += 1
       input = input_from_client
-      output = prepare_iteration_0
+      output = prepare_iteration_x(0, counter, input)
       output_response_to_client(output)
     end
     client.close
@@ -66,7 +48,7 @@ class Executable
 
   def iteration_1
       input = input_from_client
-      output = prepare_iteration_1(input)
+      output = prepare_iteration_x(1, counter, input)
       output_response_to_client(output)
     client.close
   end
@@ -75,17 +57,16 @@ class Executable
     loop do
       self.counter += 1
       input = input_from_client
-      output = prepare_iteration_2(input)
-      # if output.shift == "shutdown"
-      # break
-      # end
+      output = prepare_iteration_x(2, counter, input)
       output_response_to_client(output)
+      if output.shift == "hello"
+        self.hello_counter += 1
+      elsif output.shift == "shutdown"
+       break
+      end
     end
-
     client.close
   end
-
-
 end
 
 if __FILE__ == $0
