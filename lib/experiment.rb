@@ -17,7 +17,7 @@ until quitter.chomp == 'quit' do
   puts request_lines.inspect
 
   puts "Sending response."
-  response = "<pre>" + request_lines.join("\n") + "\n\n COUNT:#{counter}" + "</pre>"
+  response = "<pre>" + request_lines.join("\n") + "\n\n COUNT :#{counter}" + "</pre>"
 
 
 

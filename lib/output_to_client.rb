@@ -1,9 +1,10 @@
+require_relative 'executable.rb'
 
-class OutputToClient
+class OutputToClient < Executable
 
   attr_accessor :from_machine, :client
 
-  def initialize(from_machine = [], client = :no_client)
+  def initialize(from_machine = [], client)
     @from_machine = from_machine
     @client = client
   end
@@ -24,5 +25,4 @@ class OutputToClient
   #
   # puts "Sending response."
   #
-
 end

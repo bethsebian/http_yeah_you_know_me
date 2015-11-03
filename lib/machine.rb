@@ -1,17 +1,16 @@
-class Machine
+class Iteration_0
 
   attr_accessor :input, :output
 
-  def initialize(input = [], output = [])
+  def initialize(counter, input = [], output = [])
     @input = input
     @output = output
-    @counter = 0
+    @counter = counter
   end
 
 
   def process_request
-    @counter +=1
-    @output = input + [@counter]
+    @output = input + ["\n\n COUNT: #{@counter}"]
   end
 
 end
