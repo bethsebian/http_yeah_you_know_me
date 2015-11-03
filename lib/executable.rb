@@ -4,6 +4,7 @@ require_relative 'input_from_client'
 require_relative 'output_to_client'
 require_relative 'iteration_0'
 require_relative 'prep_iter_0'
+require_relative 'iteration_1'
 
 class Executable
 
@@ -30,35 +31,36 @@ class Executable
     PrepIter0.new(counter).output
   end
 
+  def prepare_iteration_1(input)
+    machine = Iteration_1.new(input)
+    machine.process_request
+    machine.output
+  end
+
   # def iterations
-  #   {0 => lambda{ |counter| PrepIter0.new(counter).output} }
+  #   {0 => lambda{ prepare_iteration_0 } }
   # end
   #
-  # def prepare_iteration_x(num, count = @counter)
-  #   iterations[num][count]
+  # def process_with_iteration_x(num)
+  #   iterations[num].call
   # end
 
   def iteration_0
     loop do
       self.counter += 1
       input = input_from_client
-      output = prepare_iteration_0(counter)
+      output = prepare_iteration_0
       output_response_to_client(output)
     end
     client.close
   end
 
-  def prepare_iteration_1(counter = @counter)
-    machine = Iteration_0.new(counter)
-    machine.process_request
-    machine.output
-  end
+
 
   def iteration_1
     loop do
-      self.counter += 1
       input = input_from_client
-      output = prepare_iteration_0(counter)
+      output = prepare_iteration_1(input)
       output_response_to_client(output)
     end
     client.close
@@ -68,5 +70,5 @@ end
 
 if __FILE__ == $0
   executor = Executable.new(9292)
-  executor.iteration_0
+  executor.iteration_1
 end
