@@ -5,8 +5,8 @@ class Machine
 
   attr_reader :parser
 
-  def initialize(to_machine)
-    @parser = Parser.new(to_machine)
+  def initialize(parse)
+    @parser = parse
   end
 
   def process_request(counter,hello_counter)

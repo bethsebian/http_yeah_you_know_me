@@ -3,6 +3,7 @@ require 'pry'
 require_relative 'input_from_client'
 require_relative 'output_to_client'
 require_relative 'machine'
+require_relative 'parser'
 
 class Executable
 
@@ -13,7 +14,6 @@ class Executable
     @client = tcp_server.accept
     @counter = 1
     @hello_counter = 1
-    @machine = Machine.new([])
   end
 
   def input_from_client
@@ -30,8 +30,8 @@ class Executable
   def process_many_requests
     loop do
       to_machine = input_from_client
-      m = Machine.new(to_machine)
       parse = Parser.new(to_machine)
+      m = Machine.new(parse)
       output = m.process_request(counter,hello_counter)
       output_response_to_client(output)
       if parse.path == "/hello"
