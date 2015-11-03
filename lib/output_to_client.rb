@@ -1,7 +1,7 @@
 
 class OutputToClient
 
-  attr_reader :from_machine, :client
+  attr_accessor :from_machine, :client
 
   def initialize(from_machine = [], client = :no_client)
     @from_machine = from_machine

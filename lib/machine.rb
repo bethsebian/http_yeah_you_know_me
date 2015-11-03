@@ -1,15 +1,17 @@
 class Machine
 
-  attr_reader :input, :output
+  attr_accessor :input, :output
 
   def initialize(input = [], output = [])
     @input = input
     @output = output
+    @counter = 0
   end
 
 
   def process_request
-    @output = input
+    @counter +=1
+    @output = input + [@counter]
   end
 
 end

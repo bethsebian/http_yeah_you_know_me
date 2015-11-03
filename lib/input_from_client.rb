@@ -1,11 +1,11 @@
 require 'pry'
 
 class InputFromClient
-  attr_reader :client, :to_machine
+  attr_accessor :client, :to_machine
 
-  def initialize(client=:no_client)
+  def initialize(client=:no_client, to_machine = [])
     @client = client
-    @to_machine = []
+    @to_machine = to_machine
   end
 
   def read_request
