@@ -4,8 +4,6 @@ require_relative 'input_from_client'
 require_relative 'output_to_client'
 require_relative 'iteration_0'
 
-
-
 class Executable
 
   attr_accessor :client, :counter, :tcp_server
@@ -22,16 +20,15 @@ class Executable
     client_input.to_machine
   end
 
+  def output_response_to_client(output)
+    client_friendly_output = OutputToClient.new(output,client)
+    client_friendly_output.write_request_to_browser
+  end
+
   def prepare_iteration_0(counter = @counter)
     machine = Iteration_0.new(counter)
     machine.process_request
     machine.output
-  end
-
-
-  def output_response_to_client(output)
-    client_friendly_output = OutputToClient.new(output,client)
-    client_friendly_output.write_request_to_browser
   end
 
   def iteration_0
@@ -43,6 +40,23 @@ class Executable
     end
     client.close
   end
+
+  def prepare_iteration_1(counter = @counter)
+    machine = Iteration_0.new(counter)
+    machine.process_request
+    machine.output
+  end
+
+  def iteration_1
+    loop do
+      self.counter += 1
+      input = input_from_client
+      output = prepare_iteration_0(counter)
+      output_response_to_client(output)
+    end
+    client.close
+  end
+
 end
 
 if __FILE__ == $0
