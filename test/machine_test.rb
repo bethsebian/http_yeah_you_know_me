@@ -10,6 +10,7 @@ class MachineTest < Minitest::Test
 
   def test_initializes_with_input_and_output_empty
     machine = Machine.new
+    
     assert_equal [], machine.input
     assert_equal [], machine.output
   end

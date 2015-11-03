@@ -2,7 +2,7 @@ require 'socket'
 require 'pry'
 require_relative 'input_from_client'
 require_relative 'output_to_client'
-require_relative 'machine'
+require_relative 'iteration_0'
 
 
 
@@ -22,33 +22,32 @@ class Executable
     client_input.to_machine
   end
 
-  def prepare_response(input, counter = @counter)
-    machine = Machine.new(counter, input)
+  def prepare_iteration_0(counter = @counter)
+    machine = Iteration_0.new(counter)
     machine.process_request
     machine.output
   end
+
 
   def output_response_to_client(output)
     client_friendly_output = OutputToClient.new(output,client)
     client_friendly_output.write_request_to_browser
   end
 
-  def looper
-
+  def iteration_0
     loop do
       self.counter += 1
       input = input_from_client
-      output = prepare_response(input)
+      output = prepare_iteration_0(counter)
       output_response_to_client(output)
     end
     client.close
   end
-
 end
 
 if __FILE__ == $0
   executor = Executable.new(9292)
-  executor.looper
+  executor.iteration_0
 end
 
 
