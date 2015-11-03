@@ -10,14 +10,13 @@ class Iteration_1
   end
 
   def process_request
-    binding.pry
-    @output = ["Hello, World! (#{@counter})"]
+    @output = ["Hello, World! Iteration 1 occurred"]
   end
 
 end
 
-  @output =
-  @input[0]
+  # @output =
+  # @input[0]
 
 # 0 ["GET / HTTP/1.1",
 # 1 "Host: 127.0.0.1:9292",

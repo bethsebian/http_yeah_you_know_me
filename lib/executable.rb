@@ -5,6 +5,7 @@ require_relative 'output_to_client'
 require_relative 'iteration_0'
 require_relative 'prep_iter_0'
 require_relative 'iteration_1'
+require_relative 'iteration_2'
 
 class Executable
 
@@ -14,6 +15,7 @@ class Executable
     @tcp_server = TCPServer.new(port)
     @client = tcp_server.accept
     @counter = 0
+
   end
 
   def input_from_client
@@ -37,6 +39,13 @@ class Executable
     machine.output
   end
 
+  def prepare_iteration_2(input, counter = @counter)
+    machine = Iteration_2.new(counter, input)
+    machine.process_request
+    machine.output
+  end
+
+
   # def iterations
   #   {0 => lambda{ prepare_iteration_0 } }
   # end
@@ -58,17 +67,30 @@ class Executable
 
 
   def iteration_1
-    loop do
       input = input_from_client
       output = prepare_iteration_1(input)
       output_response_to_client(output)
-    end
     client.close
   end
+
+  def iteration_2
+    loop do
+      self.counter += 1
+      input = input_from_client
+      output = prepare_iteration_2(input)
+      # if output.shift == "shutdown"
+      # break
+      # end
+      output_response_to_client(output)
+    end
+
+    client.close
+  end
+
 
 end
 
 if __FILE__ == $0
   executor = Executable.new(9292)
-  executor.iteration_1
+  executor.iteration_2
 end
