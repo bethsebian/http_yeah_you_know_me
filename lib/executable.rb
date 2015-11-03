@@ -30,6 +30,14 @@ class Executable
     PrepIter0.new(counter).output
   end
 
+  # def iterations
+  #   {0 => lambda{ |counter| PrepIter0.new(counter).output} }
+  # end
+  #
+  # def prepare_iteration_x(num, count = @counter)
+  #   iterations[num][count]
+  # end
+
   def iteration_0
     loop do
       self.counter += 1
@@ -62,25 +70,3 @@ if __FILE__ == $0
   executor = Executable.new(9292)
   executor.iteration_0
 end
-
-
-
-# if __FILE__ == $0
-#   tcp_server = TCPServer.new(9292)
-#   client = tcp_server.accept
-#   counter = 0
-#
-#   loop do
-#     counter += 1
-#     client_input = InputFromClient.new(client)
-#     client_input.read_request
-#     to_machine = client_input.to_machine
-#     machine = Machine.new(to_machine)
-#     machine.process_request
-#     from_machine = machine.output
-#     client_friendly_output = OutputToClient.new(from_machine,client)
-#     client_friendly_output.write_request_to_browser
-#   end
-#
-#   client.close
-# end

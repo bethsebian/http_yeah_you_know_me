@@ -20,9 +20,5 @@ class OutputToClient < Executable
     client.puts headers
     client.puts output
   end
-  # puts "Got this request:"
-  # puts request_lines.inspect
-  #
-  # puts "Sending response."
-  #
+
 end
