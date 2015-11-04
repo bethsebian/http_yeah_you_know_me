@@ -3,6 +3,7 @@ require 'pry'
 require_relative 'input_from_client'
 require_relative 'output_to_client'
 require_relative 'machine'
+require_relative 'parser'
 
 class Executable
 
@@ -10,10 +11,16 @@ class Executable
 
   def initialize(port)
     @tcp_server = TCPServer.new(port)
-    @client = tcp_server.accept
     @counter = 1
     @hello_counter = 1
-    @machine = Machine.new([])
+    @game_running = false
+    @game_correct_answer = nil
+    @game_guess = nil
+    @game_guess_counter = 0
+  end
+
+  def client_accept
+    @client = tcp_server.accept
   end
 
   def input_from_client
@@ -23,23 +30,44 @@ class Executable
   end
 
   def output_response_to_client(output)
-    client_friendly_output = OutputToClient.new(output,client)
-    client_friendly_output.write_request_to_browser
+    client_friendly_output = OutputToClient.new(client)
+    client_friendly_output.write_request_to_browser(output)
+  end
+
+  def update_executable_variables(parse)
+    case parse.path
+
+      when "/hello"
+        @hello_counter += 1
+      when "/start_game"
+        if parse.verb == "POST"
+          @game_running = true
+          @game_correct_answer = parse.word_param_entry
+        end
+      when "/game"
+        # if parse.verb == "POST"
+        #
+        # elsif parse.verb == "GET"
+        #
+        # end
+      end
+
+    @counter += 1
   end
 
   def process_many_requests
     loop do
       to_machine = input_from_client
-      m = Machine.new(to_machine)
       parse = Parser.new(to_machine)
+      m = Machine.new(parse)
       output = m.process_request(counter,hello_counter)
       output_response_to_client(output)
-      if parse.path == "/hello"
-        @hello_counter += 1
-      elsif parse.path == "/shutdown"
+
+      update_executable_variables(parse)
+      if parse.path == "/shutdown"
         break
       end
-      @counter += 1
+
     end
     client.close
   end
@@ -47,5 +75,6 @@ end
 
 if __FILE__ == $0
   executor = Executable.new(9292)
+  executor.client_accept
   executor.process_many_requests
 end
