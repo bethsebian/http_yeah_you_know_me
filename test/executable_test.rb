@@ -5,15 +5,54 @@ require 'pry'
 
 class ExecutableTest < Minitest::Test
 
+  def input(path = "/", verb = "GET")
+    ["#{verb} #{path} HTTP/1.1", "Host: 127.0.0.1:9292", "User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.10; rv:41.0) Gecko/20100101 Firefox/41.0", "Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8", "Accept-Language: en-US,en;q=0.5","Accept-Encoding: gzip, deflate", "Connection: keep-alive"]
+  end
+
   def test_executable_class_exists
     assert Executable
   end
 
   def test_updates_counter_when_update_called
-    # executor = Executable.new
+    executor = Executable.new(9292)
+    parse = Parser.new(input)
+
+    assert_equal 1, executor.counter
+
+    executor.update_executable_variables(parse)
+
+    assert_equal 2, executor.counter
+
+    executor.tcp_server.close
   end
 
-  def test_a_new_game_begins_with_a_number_the_player_doesnt_know
+  def test_updates_hello_counter_when_update_called
+    executor = Executable.new(9292)
+    parse = Parser.new(input("/hello"))
+
+    assert_equal 1, executor.hello_counter
+
+    executor.update_executable_variables(parse)
+
+    assert_equal 2, executor.hello_counter
+
+    executor.tcp_server.close
+  end
+
+  def test_doesnt_update_hello_counter_when_update_called_wrong_path
+    executor = Executable.new(9292)
+    parse = Parser.new(input("/"))
+
+    assert_equal 1, executor.hello_counter
+
+    executor.update_executable_variables(parse)
+
+    assert_equal 1, executor.hello_counter
+
+    executor.tcp_server.close
+  end
+
+  def test_game_running_defaults_to_false
     skip
   end
 

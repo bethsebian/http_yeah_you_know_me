@@ -37,18 +37,20 @@ class Executable
   def update_executable_variables(parse)
     case parse.path
 
-    when "/hello"
-      @hello_counter += 1
-    when "/start_game"
-      if parse.verb == "POST"
+      when "/hello"
+        @hello_counter += 1
+      when "/start_game"
+        if parse.verb == "POST"
+          @game_running = true
+          @game_correct_answer = parse.word_param_entry
+        end
+      when "/game"
+        # if parse.verb == "POST"
+        #
+        # elsif parse.verb == "GET"
+        #
+        # end
       end
-    when "/game"
-      # if parse.verb == "POST"
-      #
-      # elsif parse.verb == "GET"
-      #
-      # end
-    end
 
     @counter += 1
   end
