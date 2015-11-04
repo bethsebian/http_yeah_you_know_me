@@ -52,4 +52,8 @@ class Parser
     to_machine[3]
   end
 
+  def diagnostics
+    ["Verb: #{verb}"] + ["Path: #{path}"] + ["Protocol: #{protocol}"] + ["Host: #{host}"] + ["Port: #{port}"] + ["Origin: #{origin}"] + ["#{accept}"]
+  end
+
 end

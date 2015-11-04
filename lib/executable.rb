@@ -6,16 +6,17 @@ require_relative 'machine'
 require_relative 'parser'
 
 class Server
-  attr_accessor :client, :counter, :tcp_server, :hello_counter, :game_running, :guess, :guess_verdict, :magic_number
+  attr_accessor :client, :counter, :tcp_server, :hello_counter, :game_running, :guess, :guess_verdict, :magic_number, :game_guess_counter
 
   def initialize(port)
     @tcp_server = TCPServer.new(port)
     @counter = 1
     @hello_counter = 1
     @game_running = false
-    @game_correct_answer = nil
-    @game_guess = nil
+    @magic_number = nil
+    @guess = nil
     @game_guess_counter = 0
+    @status_code = 000
   end
 
   def accept_client
@@ -28,9 +29,9 @@ class Server
     client_input.to_machine
   end
 
-  def output_response_to_client(output)
+  def output_response_to_client(output,status_code = nil)
     client_friendly_output = OutputToClient.new(client)
-    client_friendly_output.write_request_to_browser(output)
+    client_friendly_output.write_request_to_browser(output, status_code)
   end
 
   def update_executable_variables(parse)
@@ -44,15 +45,15 @@ class Server
           @game_running = true
           @magic_number = rand(100)
         end
-
       when "/game"
         if parse.verb == "POST"
-          @guess = parse.guess
-        # elsif parse.verb == "GET"
-        #
+          @guess = parse.word_param_entry
+          @game_guess_counter += 1
+          @status_code = 303
+        elsif parse.verb == "GET"
+          @game_running = false if parse.word_param_entry == @magic_number
         end
       end
-
     @counter += 1
   end
 
@@ -62,19 +63,18 @@ class Server
 
   def process_many_requests
     loop do
-      input = input_from_client
 
-      parsed_input = Parser.new(input)
-      machine = Machine.new(parsed_input,@magic_number,@game_running)
-      output = machine.process_request(counter,hello_counter)
-      output_response_to_client(output)
+        input = input_from_client
+        parsed_input = Parser.new(input)
+        machine = Machine.new(parsed_input,@magic_number,@game_running,@game_guess_counter)
+        output = machine.process_request(counter,hello_counter)
+        update_executable_variables(parsed_input)
 
-      update_executable_variables(parsed_input)
+        output_response_to_client(output,@status_code)
 
-      if parsed_input.path == "/shutdown"
-        break
-      end
-
+        if parsed_input.path == "/shutdown"
+          break
+        end
     end
     client.close
   end

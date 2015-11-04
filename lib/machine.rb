@@ -1,74 +1,60 @@
 require 'pry'
 require_relative 'executable'
+require_relative 'responses'
 
 class Machine
-
-  def dictionary
-    ["hello", "pizza", "tired"]
-  end
+  include Responses
 
   attr_reader :parser, :game, :guess_verdict, :guess
   attr_accessor :magic_number, :game_running
 
-  def initialize(parse,magic_number = nil,game_running=false)
+  def initialize(parse,magic_number = nil,game_running=false, game_guess_counter = 0)
     @parser = parse
     @game_running = game_running
     @guess = parse.guess
     @magic_number = magic_number
+    @game_guess_counter = game_guess_counter
   end
 
   def game_results
     verdict = @guess <=> @magic_number
     case verdict
-    when -1
-      ["too low"]
-    when 0
-      ["correct"]
-    when 1
-      ["too high"]
+    when -1 then ["too low"]
+    when 0  then ["correct"]
+    when 1  then ["too high"]
     end
   end
 
+
+
   def process_request(counter,hello_counter)
+    output = [""]
     case @parser.path
-      when "/"
-        ["Verb: #{parser.verb}"] + ["Path: #{parser.path}"] + ["Protocol: #{parser.protocol}"] + ["Host: #{parser.host}"] + ["Port: #{parser.port}"] + ["Origin: #{parser.origin}"] + ["#{parser.accept}"]
-      when "/hello"
-        ["Hello"] +[" World! (#{hello_counter})"]
-      when "/datetime"
-        [Time.now.strftime("%l:%M %p on %A, %B %d, %Y")]
-      when "/shutdown"
-        ["shutdown","Total Requests: #{counter}"]
-      when "/word_search"
-        if dictionary.include?(@parser.word_param_entry)
-          ["word is a known word"]
-        else
-          ["word is not a known word"]
-        end
-      when "/start_game"
-        if @parser.verb == "POST"
-          @game = true
-              # TO DO: define a number to measure against
-          ["Good Luck"]
-        else
-          ["No game started"]
-        end
-      when "/game"
-          if @parser.verb == "GET" && @game_running
-            #  return results of counter
-              # TO DO: create a counter
-          elsif @parser.verb == "POST" && @game_running
-            if @parser.guess == true
-              game_results
-            end
-            # execute redirect back to get game
-              # TO DO: define method for looping back to process_request with new input
-          else
-            ["Not in game!"]
-          end
+    when "/hello"       then output = Responses.hello(hello_counter)
+    when "/datetime"    then output = Responses.datetime
+    when "/shutdown"    then output = Responses.shutdown(counter)
+    when "/word_search" then output = Responses.word_search(@parser.word_param_entry)
+
+    when "/start_game"
+      if @parser.verb == "POST"              # TO DO: define a number to measure against
+        ["Good Luck"]
       else
+        ["No game started"]
+      end
+    when "/game"
+      if @parser.verb == "GET" && @game_running
+          game_results + ["Total guesses: #{game_guess_counter}"]
+      elsif @parser.verb == "POST" && @game_running
+        # execute redirect back to get game
+          # TO DO: define method for looping back to process_request with new input
+      else
+        ["Not in game!"]
+      end
+    else
 
     end
+    output += ["\n\n\n"] + Responses.root(@parser.diagnostics)
+
   end
 end
 

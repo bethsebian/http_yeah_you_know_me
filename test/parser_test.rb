@@ -42,6 +42,12 @@ class ParserTest < Minitest::Test
     assert_equal "piz", parse.word_param_entry
   end
 
+  def test_can_return_param_value_when_param_passed
+    parse = Parser.new(input("/game?guess=46"))
+
+    assert_equal "46", parse.word_param_entry
+  end
+
   def test_can_return_verb
     parse = Parser.new(input)
 
@@ -78,6 +84,7 @@ class ParserTest < Minitest::Test
     assert_equal "127.0.0.1", parse.origin
   end
 
+  # test_parser_prepares_diagnostic
 
 
 end

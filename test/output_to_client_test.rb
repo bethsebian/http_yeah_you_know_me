@@ -19,12 +19,9 @@ class OutputToClientTest < Minitest::Test
     assert output.respond_to?(:write_request_to_browser)
   end
 
+  def test_it_redirects_when_status_code_is_303
+  end
+  
+
 end
 
-# listens on port 9292
-# responds to HTTP requests
-# responds with a valid HTML response that displays the words Hello, World! (0) where the 0 increments each request until the server is restarted
-
-# in executable we write tcp_server = TCPServer.new(9292)
-# input = InputFromClient.new(tcp_server)
-# input.client = tcp_server.accept

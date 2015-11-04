@@ -5,8 +5,8 @@ require 'pry'
 
 class ExecutableTest < Minitest::Test
 
-  def input(path = "/", verb = "GET", guess = nil)
-    ["#{verb} #{path} HTTP/1.1", "Host: 127.0.0.1:9292", "User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.10; rv:41.0) Gecko/20100101 Firefox/41.0", "Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8", "Accept-Language: en-US,en;q=0.5","Accept-Encoding: gzip, deflate", "Connection: keep-alive",guess]
+  def input(path = "/", verb = "GET")
+    ["#{verb} #{path} HTTP/1.1", "Host: 127.0.0.1:9292", "User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.10; rv:41.0) Gecko/20100101 Firefox/41.0", "Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8", "Accept-Language: en-US,en;q=0.5","Accept-Encoding: gzip, deflate", "Connection: keep-alive"]
   end
 
   def test_executable_class_exists
@@ -81,11 +81,31 @@ class ExecutableTest < Minitest::Test
 
   def test_guess_is_stored
     executor = Server.new(9292)
-    parse = Parser.new(input("/game","POST",46))
-
+    parse = Parser.new(input("/game?guess=46","POST"))
     executor.update_executable_variables(parse)
 
-    assert_equal 46, executor.guess
+    assert_equal "46", executor.guess
+
+    executor.tcp_server.close
+  end
+
+  def test_guess_counter_increments_once
+    executor = Server.new(9292)
+    parse = Parser.new(input("/game?guess=46","POST"))
+    executor.update_executable_variables(parse)
+
+    assert_equal 1, executor.game_guess_counter
+
+    executor.tcp_server.close
+  end
+
+  def test_guess_counter_increments_twice
+    executor = Server.new(9292)
+    parse = Parser.new(input("/game?guess=46","POST"))
+    executor.update_executable_variables(parse)
+    executor.update_executable_variables(parse)
+
+    assert_equal 2, executor.game_guess_counter
 
     executor.tcp_server.close
   end
@@ -93,7 +113,7 @@ class ExecutableTest < Minitest::Test
   # def test_game_returns_verdict_on_guess
   #   executor = Server.new(9292)
   #   parse = Parser.new(input("/game","POST",46))
-  # 
+  #
   #   executor.update_executable_variables(parse)
   #
   #   assert executor.guess_verdict
