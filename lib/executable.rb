@@ -2,19 +2,18 @@ require 'socket'
 require 'pry'
 require_relative 'input_from_client'
 require_relative 'output_to_client'
-require_relative 'iteration_0'
-require_relative 'prep_iter_0'
-require_relative 'iteration_1'
-require_relative 'iteration_2'
+require_relative 'machine'
 
 class Executable
 
-  attr_accessor :client, :counter, :tcp_server
+  attr_accessor :client, :counter, :tcp_server, :hello_counter
 
   def initialize(port)
     @tcp_server = TCPServer.new(port)
     @client = tcp_server.accept
-    @counter = 0
+    @counter = 1
+    @hello_counter = 1
+    @machine = Machine.new([])
   end
 
   def input_from_client
@@ -28,63 +27,25 @@ class Executable
     client_friendly_output.write_request_to_browser
   end
 
-  def prepare_iteration_0(counter = @counter)
-    PrepIter0.new(counter).output
-  end
-
-  def prepare_iteration_1(input)
-    machine = Iteration_1.new(input)
-    machine.process_request
-    machine.output
-  end
-
-  def prepare_iteration_2(input, counter = @counter)
-    machine = Iteration_2.new(counter, input)
-    machine.process_request
-    machine.output
-  end
-
-  # def iterations
-  #   {0 => lambda{ prepare_iteration_0 } }
-  # end
-  #
-  # def process_with_iteration_x(num)
-  #   iterations[num].call
-  # end
-
-  def iteration_0
+  def process_many_requests
     loop do
-      self.counter += 1
-      input = input_from_client
-      output = prepare_iteration_0
+      to_machine = input_from_client
+      m = Machine.new(to_machine)
+      parse = Parser.new(to_machine)
+      output = m.process_request(counter,hello_counter)
       output_response_to_client(output)
+      if parse.path == "/hello"
+        @hello_counter += 1
+      elsif parse.path == "/shutdown"
+        break
+      end
+      @counter += 1
     end
-    client.close
-  end
-
-  def iteration_1
-      input = input_from_client
-      output = prepare_iteration_1(input)
-      output_response_to_client(output)
-    client.close
-  end
-
-  def iteration_2
-    loop do
-      self.counter += 1
-      input = input_from_client
-      output = prepare_iteration_2(input)
-      # if output.shift == "shutdown"
-      # break
-      # end
-      output_response_to_client(output)
-    end
-    
     client.close
   end
 end
 
 if __FILE__ == $0
   executor = Executable.new(9292)
-  executor.iteration_2
+  executor.process_many_requests
 end
