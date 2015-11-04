@@ -7,17 +7,32 @@ class Machine
     ["hello", "pizza", "tired"]
   end
 
-  attr_reader :parser, :game
+  attr_reader :parser, :game, :guess_verdict, :guess
+  attr_accessor :magic_number, :game_running
 
-  def initialize(parse)
+  def initialize(parse,magic_number = nil,game_running=false)
     @parser = parse
-    @game = false
+    @game_running = game_running
+    @guess = parse.guess
+    @magic_number = magic_number
+  end
+
+  def game_results
+    verdict = @guess <=> @magic_number
+    case verdict
+    when -1
+      ["too low"]
+    when 0
+      ["correct"]
+    when 1
+      ["too high"]
+    end
   end
 
   def process_request(counter,hello_counter)
     case @parser.path
       when "/"
-        ["Verb: #{parser.verb}"] + ["Path: #{parser.path}"] + ["Protocol: #{parser.protocol}"] + ["Host: #{parser.host}"] + ["Port: #{parser.port}"] + ["Origin: #{parser.origin}"] + ["Accept: #{parser.accept}"]
+        ["Verb: #{parser.verb}"] + ["Path: #{parser.path}"] + ["Protocol: #{parser.protocol}"] + ["Host: #{parser.host}"] + ["Port: #{parser.port}"] + ["Origin: #{parser.origin}"] + ["#{parser.accept}"]
       when "/hello"
         ["Hello"] +[" World! (#{hello_counter})"]
       when "/datetime"
@@ -38,17 +53,14 @@ class Machine
         else
           ["No game started"]
         end
-        # starts game too
       when "/game"
-          if @parser.verb == "GET" && game
+          if @parser.verb == "GET" && @game_running
             #  return results of counter
               # TO DO: create a counter
-            #  define a verdict for each guess (too high, too low, correct)
-              # TO DO: write a method that compares the guess against our number
-          elsif @parser.verb == "POST" && game
+          elsif @parser.verb == "POST" && @game_running
             if @parser.guess == true
-            # @parser.guess_value gets saved
-              # TO DO: define variable for storing guess
+              game_results
+            end
             # execute redirect back to get game
               # TO DO: define method for looping back to process_request with new input
           else
@@ -58,7 +70,6 @@ class Machine
 
     end
   end
-end
 end
 
 # <pre>

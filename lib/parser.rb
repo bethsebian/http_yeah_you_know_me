@@ -24,6 +24,10 @@ class Parser
     word_param == "guess"
   end
 
+  def guess
+    to_machine[7]
+  end
+
   def verb
     to_machine[0].split[0]
   end
