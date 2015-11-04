@@ -9,18 +9,9 @@ class ExecutableTest < Minitest::Test
     assert Executable
   end
 
-  # each new executable has a client
-  # each has a counter
-  # method(s) for looping and incrementing counters to do stuff
-
-
-  def test_input_from_client_to_machine
-    client_input = InputFromClient.new(:no_client, [1,2,3])
-    input = client_input.to_machine
-    machine = Machine.new(input)
-    assert_equal [1,2,3], machine.input
-  end
-
+  # class exists
+  # class initializes with all the stuff we expect
+  # 
 
 end
 

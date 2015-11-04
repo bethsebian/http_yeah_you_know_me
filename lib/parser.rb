@@ -21,7 +21,7 @@ class Parser
   end
 
   def host
-    to_machine[1].split(":")[1].strip
+    to_machine[1].split(":")[1].strip + ":" + to_machine[1].split(":")[2].strip
   end
 
   def port
