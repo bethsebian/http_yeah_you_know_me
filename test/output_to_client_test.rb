@@ -8,23 +8,10 @@ class OutputToClientTest < Minitest::Test
     assert OutputToClient
   end
 
-  def test_initializes_with_nothing_from_machine
-    output = OutputToClient.new
+  def test_initializes_with_no_client
+    writer = OutputToClient.new
 
-    assert_equal [], output.from_machine
-  end
-
-  def test_can_initialize_with_array_from_machine
-    output = OutputToClient.new([1,2,3])
-
-    assert_equal [1,2,3], output.from_machine
-  end
-
-  def test_initializes_with_client_server_output
-    tcp_server = TCPServer.new(9292)
-    output = OutputToClient.new([],tcp_server)
-
-    assert_equal tcp_server, output.client
+    assert_equal :no_client, writer.client
   end
 
   def test_responds_to_write_request

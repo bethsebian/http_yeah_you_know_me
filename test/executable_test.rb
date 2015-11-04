@@ -9,10 +9,6 @@ class ExecutableTest < Minitest::Test
     assert Executable
   end
 
-  # class exists
-  # class initializes with all the stuff we expect
-  # 
-
 end
 
 # listens on port 9292

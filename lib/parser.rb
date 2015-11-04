@@ -9,7 +9,19 @@ class Parser
   end
 
   def path
-    to_machine[0].split[1]
+    to_machine[0].split[1].split("?")[0]
+  end
+
+  def word_param
+    to_machine[0].split[1].split("?")[1].split("=")[0]
+  end
+
+  def word_param_entry
+    to_machine[0].split[1].split("?")[1].split("=")[1]
+  end
+
+  def guess?
+    word_param == "guess"
   end
 
   def verb

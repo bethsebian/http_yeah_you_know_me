@@ -34,12 +34,14 @@ class Executable
       m = Machine.new(parse)
       output = m.process_request(counter,hello_counter)
       output_response_to_client(output)
+
       if parse.path == "/hello"
         @hello_counter += 1
       elsif parse.path == "/shutdown"
         break
       end
       @counter += 1
+
     end
     client.close
   end
