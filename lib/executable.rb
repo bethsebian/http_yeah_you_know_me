@@ -14,6 +14,10 @@ class Executable
     @client = tcp_server.accept
     @counter = 1
     @hello_counter = 1
+    @game_running = false
+    @game_correct_answer = nil
+    @game_guess = nil
+    @game_guess_counter = 0
   end
 
   def input_from_client
@@ -27,6 +31,25 @@ class Executable
     client_friendly_output.write_request_to_browser(output)
   end
 
+  def update_executable_variables(parse)
+    case parse.path
+
+    when "/hello"
+      @hello_counter += 1
+    when "/start_game"
+      if parse.verb == "POST"
+      end
+    when "/game"
+      # if parse.verb == "POST"
+      #
+      # elsif parse.verb == "GET"
+      #
+      # end
+    end
+
+    @counter += 1
+  end
+
   def process_many_requests
     loop do
       to_machine = input_from_client
@@ -35,12 +58,10 @@ class Executable
       output = m.process_request(counter,hello_counter)
       output_response_to_client(output)
 
-      if parse.path == "/hello"
-        @hello_counter += 1
-      elsif parse.path == "/shutdown"
+      update_executable_variables(parse)
+      if parse.path == "/shutdown"
         break
       end
-      @counter += 1
 
     end
     client.close
