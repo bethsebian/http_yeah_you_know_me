@@ -23,8 +23,8 @@ class Executable
   end
 
   def output_response_to_client(output)
-    client_friendly_output = OutputToClient.new(output,client)
-    client_friendly_output.write_request_to_browser
+    client_friendly_output = OutputToClient.new(client)
+    client_friendly_output.write_request_to_browser(output)
   end
 
   def process_many_requests

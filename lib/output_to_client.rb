@@ -2,14 +2,13 @@ require_relative 'executable.rb'
 
 class OutputToClient
 
-  attr_accessor :from_machine, :client
+  attr_accessor :client
 
-  def initialize(from_machine = [], client = :no_client)
-    @from_machine = from_machine
+  def initialize(client = :no_client)
     @client = client
   end
 
-  def write_request_to_browser
+  def write_request_to_browser(from_machine)
     response = "<pre>" + from_machine.join("\n") + "</pre>"
     output = "<html><head></head><body>#{response}</body></html>"
     headers = ["http/1.1 200 ok",
