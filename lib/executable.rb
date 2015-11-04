@@ -15,7 +15,6 @@ class Executable
     @tcp_server = TCPServer.new(port)
     @client = tcp_server.accept
     @counter = 0
-
   end
 
   def input_from_client
@@ -45,7 +44,6 @@ class Executable
     machine.output
   end
 
-
   # def iterations
   #   {0 => lambda{ prepare_iteration_0 } }
   # end
@@ -64,8 +62,6 @@ class Executable
     client.close
   end
 
-
-
   def iteration_1
       input = input_from_client
       output = prepare_iteration_1(input)
@@ -83,11 +79,9 @@ class Executable
       # end
       output_response_to_client(output)
     end
-
+    
     client.close
   end
-
-
 end
 
 if __FILE__ == $0

@@ -1,7 +1,6 @@
 require 'pry'
 
 class Iteration_2
-
   attr_accessor :output, :input, :path, :counter
 
   def initialize(counter, input, output = [])
@@ -10,7 +9,6 @@ class Iteration_2
     @path = @input[0].split[1]
     @counter = counter
   end
-
 
   def process_request
     case path
@@ -23,11 +21,11 @@ class Iteration_2
         iteration_0.process_request
         self.output = iteration_0.output
       when "/datetime"
-        self.output = ["11:07 Sunday"]
+        t = Time.now
+        self.output = [t.strftime("%l:%M %p on %A, %B %d, %Y")]
       when "/shutdown"
         self.output = ["shutdown","Total Requests: #{@counter}"]
       else
     end
   end
-
 end
