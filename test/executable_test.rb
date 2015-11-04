@@ -9,6 +9,10 @@ class ExecutableTest < Minitest::Test
     assert Executable
   end
 
+  def test_updates_counter_when_update_called
+    # executor = Executable.new
+  end
+
   def test_a_new_game_begins_with_a_number_the_player_doesnt_know
     skip
   end

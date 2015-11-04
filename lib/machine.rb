@@ -33,6 +33,7 @@ class Machine
       when "/start_game"
         if @parser.verb == "POST"
           @game = true
+              # TO DO: define a number to measure against
           ["Good Luck"]
         else
           ["No game started"]
@@ -40,16 +41,16 @@ class Machine
         # starts game too
       when "/game"
           if @parser.verb == "GET" && game
-            # how many guesses have been taken
-            # for each guess, too high, too low, correct
+            #  return results of counter
+              # TO DO: create a counter
+            #  define a verdict for each guess (too high, too low, correct)
+              # TO DO: write a method that compares the guess against our number
           elsif @parser.verb == "POST" && game
-            # if @parser.guess == true 
-            #   @parser.guess_value gets saved
-            #   execute redirect
-
-
-            # request includes parameter named guess
-            # sends user redirect response
+            if @parser.guess == true
+            # @parser.guess_value gets saved
+              # TO DO: define variable for storing guess
+            # execute redirect back to get game
+              # TO DO: define method for looping back to process_request with new input
           else
             ["Not in game!"]
           end
@@ -58,7 +59,7 @@ class Machine
     end
   end
 end
-
+end
 
 # <pre>
 # Verb: POST

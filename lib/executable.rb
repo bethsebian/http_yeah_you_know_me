@@ -11,13 +11,16 @@ class Executable
 
   def initialize(port)
     @tcp_server = TCPServer.new(port)
-    @client = tcp_server.accept
     @counter = 1
     @hello_counter = 1
     @game_running = false
     @game_correct_answer = nil
     @game_guess = nil
     @game_guess_counter = 0
+  end
+
+  def client_accept
+    @client = tcp_server.accept
   end
 
   def input_from_client
@@ -70,5 +73,6 @@ end
 
 if __FILE__ == $0
   executor = Executable.new(9292)
+  executor.client_accept
   executor.process_many_requests
 end
