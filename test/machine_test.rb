@@ -92,32 +92,4 @@ class MachineTest < Minitest::Test
     refute machine.game
   end
 
-  def test_a_new_game_begins_with_a_number_the_player_doesnt_know
-    skip
-  end
-
-  def test_guess_is_stored
-    skip
-  end
-
-  def test_guess_larger_than_game_number_returns_too_high
-    skip
-  end
-
-  def test_guess_smaller_than_game_number_returns_too_low
-    skip
-  end
-
-  def test_guess_thats_same_as_game_number_returns_correct
-    skip
-  end
-
-  def test_game_sends_player_back_to_verb_get_and_path_game_when_guess_is_made
-    skip
-  end
-
-  def test_guesses_are_counted
-    skip
-  end
-
 end
