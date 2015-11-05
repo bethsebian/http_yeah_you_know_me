@@ -56,4 +56,18 @@ class ServerExecTest < Minitest::Test
     assert_equal server.game.process(parse), server.assign(parse)
   end
 
+  def test_assigns_client_request_to_game_when_returning_guess
+    server = ServerExec.new
+    parse = Parser.new(input("/game"))
+
+    assert_equal server.game.process(parse), server.assign(parse)
+  end
+
+  def test_assigns_client_request_to_game_when_guessing
+    server = ServerExec.new
+    parse = Parser.new(input("/game","POST"))
+
+    assert_equal server.game.process(parse), server.assign(parse)
+  end
+
 end

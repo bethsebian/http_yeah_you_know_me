@@ -13,11 +13,12 @@ class Game
     @magic_number = magic_number
   end
 
+
   def game_results
-    verdict = (guess <=> magic_number)
+    verdict = (self.guess <=> self.magic_number)
     case verdict
       when -1 then ["too low"]
-      when 0  then ["correct"]
+      when 0  then ["Correct!!! Play again... now."]
       when 1  then ["too high"]
     end
   end
@@ -28,16 +29,20 @@ class Game
       when "/start_game"
 
         if parse.verb == "POST"
+          self.magic_number = rand(10)
+          self.game_running = true
           ["Good Luck"]
         else
           ["Game has not started, try POST request"]
         end
 
       when "/game"
-
         if parse.verb == "GET" && game_running
+          self.game_guess_counter +=1
+          self.game_running = false if game_results == ["Correct!!! Play again... now."]
           game_results + ["Total guesses: #{game_guess_counter}"]
         elsif parse.verb == "POST" && game_running
+          self.guess = parse.word_param_entry.to_i
           ["Good guess! Let's see..."]
         else
           ["Start a game first!"]

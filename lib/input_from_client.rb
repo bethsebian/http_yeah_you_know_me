@@ -12,6 +12,7 @@ class InputFromClient
     while line = client.gets and !line.chomp.empty?
       @to_machine << line.chomp
     end
+    @to_machine
   end
 
 end

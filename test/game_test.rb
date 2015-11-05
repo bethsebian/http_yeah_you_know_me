@@ -45,14 +45,14 @@ class GameTest < Minitest::Test
 
   def test_game_reads_game_results_if_game_running
     game = Game.new(5,0,true)
-    parse = Parser.new(input("/game", "GET"))
+    parse = Parser.new(input("/game?guess=9", "GET"))
 
-    assert_equal ["too high", "Total guesses: 0"], game.process(parse)
+    assert_equal ["too high", "Total guesses: 1"], game.process(parse)
   end
 
   def test_game_responds_when_guess_made
     game = Game.new(5,0,true)
-    parse = Parser.new(input("/game", "POST"))
+    parse = Parser.new(input("/game?guess=4", "POST"))
 
     assert_equal ["Good guess! Let's see..."], game.process(parse)
   end
@@ -64,6 +64,27 @@ class GameTest < Minitest::Test
     assert_equal ["Start a game first!"], game.process(parse)
   end
 
+  def test_game_sets_magic_number_when_game_starts
+    game = Game.new
+
+    refute game.magic_number
+
+    parse = Parser.new(input("/start_game", "POST"))
+    game.process(parse)
+
+    assert game.magic_number
+  end
+
+  def test_game_sets_guess
+    game = Game.new(nil,nil,true)
+
+    refute game.magic_number
+
+    parse = Parser.new(input("/game?guess=9", "POST"))
+    game.process(parse)
+
+    assert_equal 9, game.guess
+  end
 
 
 end
