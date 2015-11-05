@@ -6,8 +6,7 @@ class CatchAll
 
   attr_accessor :hello_counter, :counter
 
-  def initialize(counter,hello_counter)
-    @counter = counter
+  def initialize(hello_counter = 0)
     @hello_counter = hello_counter
   end
 

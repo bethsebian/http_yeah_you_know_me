@@ -16,7 +16,7 @@ class ServerExec
     @tcp_server = tcp_server
     @counter = 0
     @word = Word.new
-    @catch_all = CatchAll.new(counter,0)
+    @catch_all = CatchAll.new(counter)
     @game = Game.new
   end
 
@@ -46,17 +46,17 @@ class ServerExec
 
   def process_many_requests
     loop do
+      accept_client
       input = input_from_client
-      binding.pry
       parsed_input = Parser.new(input)
       output = assign(parsed_input)
       output_response_to_client(output,game.status_code)
-
+      client.close
       if parsed_input.path == "/shutdown"
         break
       end
     end
-    client.close
+
   end
 end
 
@@ -64,6 +64,6 @@ end
 if __FILE__ == $0
   tcp_server = TCPServer.new(9292)
   server = ServerExec.new(tcp_server)
-  server.accept_client
+  # server.accept_client
   server.process_many_requests
 end

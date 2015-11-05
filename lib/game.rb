@@ -38,13 +38,15 @@ class Game
 
   def process_game_get_and_post(parse)
     if parse.verb == "GET" && game_running
-      self.game_guess_counter +=1
+      self.game_guess_counter += 1
+      temp = game_results
       if game_results == ["Correct!!! Play again... now."]
         self.game_running = false
         self.game_guess_counter = 0
         self.guess = nil
       end
-      game_results + ["Total guesses: #{game_guess_counter}"]
+      self.status_code = 000
+      temp + ["Total guesses: #{game_guess_counter}"]
     elsif parse.verb == "POST" && game_running
       self.guess = parse.word_param_entry.to_i
       self.status_code = 302
@@ -53,7 +55,7 @@ class Game
       ["Start a game first!"]
     end
   end
-  
+
 
   def process(parse)
     output = case parse.path

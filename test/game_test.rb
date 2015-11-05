@@ -1,5 +1,4 @@
 require 'minitest/autorun'
-require_relative '../lib/machine'
 require_relative '../lib/parser'
 require_relative '../lib/game'
 require 'pry'
@@ -11,8 +10,8 @@ class GameTest < Minitest::Test
   end
 
 
-  def diagnostics_tester(path = "/shutdown")
-    ["\n\n\n"] + ["Verb: GET", "Path: #{path}", "Protocol: HTTP/1.1", "Host: 127.0.0.1:9292", "Port: 9292", "Origin: 127.0.0.1", "Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8"]
+  def diagnostics_tester(path = "/shutdown",verb="GET")
+    ["\n\n\n"] + ["Verb: #{verb}", "Path: #{path}", "Protocol: HTTP/1.1", "Host: 127.0.0.1:9292", "Port: 9292", "Origin: 127.0.0.1", "Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8"]
   end
 
   def test_game_accurately_identifies_results
@@ -32,36 +31,41 @@ class GameTest < Minitest::Test
   def test_game_reads_start_script
     game = Game.new(0,0)
     parse = Parser.new(input("/start_game", "POST"))
+    expected = ["Good Luck"] + diagnostics_tester("/start_game","POST")
 
-    assert_equal ["Good Luck"], game.process(parse)
+    assert_equal expected, game.process(parse)
   end
 
   def test_game_reads_start_imperative_script
     game = Game.new(0,0)
     parse = Parser.new(input("/start_game", "GET"))
+    expected = ["Game has not started, try POST request"] + diagnostics_tester("/start_game")
 
-    assert_equal ["Game has not started, try POST request"], game.process(parse)
+    assert_equal expected, game.process(parse)
   end
 
   def test_game_reads_game_results_if_game_running
     game = Game.new(5,0,true)
     parse = Parser.new(input("/game?guess=9", "GET"))
+    expected = ["too high", "Total guesses: 1"] + diagnostics_tester("/game")
 
-    assert_equal ["too high", "Total guesses: 1"], game.process(parse)
+    assert_equal expected, game.process(parse)
   end
 
   def test_game_responds_when_guess_made
     game = Game.new(5,0,true)
     parse = Parser.new(input("/game?guess=4", "POST"))
+    expected = ["Good guess! Let's see..."] + diagnostics_tester("/game","POST")
 
-    assert_equal ["Good guess! Let's see..."], game.process(parse)
+    assert_equal expected, game.process(parse)
   end
 
   def test_game_has_hissy_if_game_hasnt_been_started
     game = Game.new(5,0)
     parse = Parser.new(input("/game", "POST"))
+    expected = ["Start a game first!"] + diagnostics_tester("/game","POST")
 
-    assert_equal ["Start a game first!"], game.process(parse)
+    assert_equal expected, game.process(parse)
   end
 
   def test_game_sets_magic_number_when_game_starts
