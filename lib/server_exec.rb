@@ -3,6 +3,7 @@ require_relative 'catch_all'
 require_relative 'word'
 require_relative 'input_from_client'
 require_relative 'output_to_client'
+require_relative 'parser'
 require 'socket'
 require 'pry'
 
@@ -46,6 +47,7 @@ class ServerExec
   def process_many_requests
     loop do
       input = input_from_client
+      binding.pry
       parsed_input = Parser.new(input)
       output = assign(parsed_input)
       output_response_to_client(output,game.status_code)

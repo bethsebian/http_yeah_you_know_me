@@ -1,4 +1,3 @@
-require_relative 'executable.rb'
 
 class OutputToClient
 
@@ -17,7 +16,7 @@ class OutputToClient
     if status_code == 302
       puts "redirect sent"
       headers = ["HTTP/1.1 302 Found",
-              "Location: http://127.0.0.1:9292/\r\n\r\n"].join("\r\n")
+              "Location: http://127.0.0.1:9292/game\r\n\r\n"].join("\r\n")
     else
       headers = ["http/1.1 200 ok",
               "date: #{Time.now.strftime('%a, %e %b %Y %H:%M:%S %z')}",
