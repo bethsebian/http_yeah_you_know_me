@@ -26,7 +26,7 @@ class GameTest < Minitest::Test
 
     game = Game.new(10,10)
 
-    assert_equal ["correct"], game.game_results
+    assert_equal ["Correct!!! Play again... now."], game.game_results
   end
 
   def test_game_reads_start_script

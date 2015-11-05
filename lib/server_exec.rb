@@ -8,7 +8,7 @@ require 'pry'
 
 class ServerExec
 
-  attr_reader :word, :catch_all, :game, :client, :status_code
+  attr_reader :word, :catch_all, :game, :client, :status_code, :tcp_server
   attr_accessor :counter
 
   def initialize(tcp_server = nil)

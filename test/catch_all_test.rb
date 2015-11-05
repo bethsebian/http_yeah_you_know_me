@@ -55,7 +55,7 @@ class CatchAllTest < Minitest::Test
     parse = Parser.new(input("/shutdown"))
     catcher = CatchAll.new(3,4)
     machine = Machine.new(parse,catcher)
-    expected = ["shutdown", "Total Requests: 3"] + diagnostics_tester
+    expected = ["Total Requests: 3"] + diagnostics_tester
 
     assert_equal expected, machine.process_request(3,4)
   end

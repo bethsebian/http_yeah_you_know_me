@@ -17,7 +17,7 @@ module Responses
   end
 
   def self.shutdown(counter)
-    ["shutdown","Total Requests: #{counter}"]
+    ["Total Requests: #{counter}"]
   end
 
   def self.word_search(word)
