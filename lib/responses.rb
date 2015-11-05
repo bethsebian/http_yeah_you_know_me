@@ -9,7 +9,7 @@ module Responses
   end
 
   def self.hello(hello_counter)
-    ["Hello", " World! (#{hello_counter})"]
+    ["Hello World! (#{hello_counter})"]
   end
 
   def self.datetime

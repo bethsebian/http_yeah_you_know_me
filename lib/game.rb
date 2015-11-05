@@ -25,7 +25,7 @@ class Game
 
   def process(parse)
 
-    case parse.path
+    output = case parse.path
       when "/start_game"
 
         if parse.verb == "POST"
@@ -39,7 +39,11 @@ class Game
       when "/game"
         if parse.verb == "GET" && game_running
           self.game_guess_counter +=1
-          self.game_running = false if game_results == ["Correct!!! Play again... now."]
+          if game_results == ["Correct!!! Play again... now."]
+            self.game_running = false
+            self.game_guess_counter = 0
+            self.guess = nil
+          end
           game_results + ["Total guesses: #{game_guess_counter}"]
         elsif parse.verb == "POST" && game_running
           self.guess = parse.word_param_entry.to_i
@@ -51,6 +55,7 @@ class Game
       else
         [""]
     end
+    output + ["\n\n\n"] + parse.diagnostics
   end
 
 

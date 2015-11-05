@@ -44,7 +44,7 @@ class ServerExec
       when "/game"
         game.process(parse)
       else
-        catch_all.process(parse)
+        catch_all.process(parse,counter)
     end
   end
 
