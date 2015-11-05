@@ -5,6 +5,7 @@ require_relative 'output_to_client'
 require_relative 'machine'
 require_relative 'parser'
 require_relative 'catch_all'
+require_relative 'word'
 
 class Server
   attr_accessor :client, :counter, :tcp_server, :hello_counter, :game_running, :guess, :guess_verdict, :magic_number, :game_guess_counter
@@ -19,6 +20,7 @@ class Server
     @game_guess_counter = 0
     @status_code = 000
     @catch_all = CatchAll.new(counter,hello_counter)
+    @word = Word.new
   end
 
   def accept_client
@@ -66,10 +68,9 @@ class Server
 
   def process_many_requests
     loop do
-
         input = input_from_client
         parsed_input = Parser.new(input)
-        machine = Machine.new(parsed_input,@catch_all,@magic_number,@game_running,@game_guess_counter)
+        machine = Machine.new(parsed_input,@catch_all,@word,@magic_number,@game_running,@game_guess_counter)
         output = machine.process_request(counter,hello_counter)
 
         update_executable_variables(parsed_input)

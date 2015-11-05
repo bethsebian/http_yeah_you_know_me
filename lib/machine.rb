@@ -5,16 +5,17 @@ require_relative 'responses'
 class Machine
   include Responses
 
-  attr_reader :parser, :game, :guess_verdict, :guess, :catch_all
+  attr_reader :parser, :game, :guess_verdict, :guess, :catch_all, :word
   attr_accessor :magic_number, :game_running
 
-  def initialize(parse,catch_all = nil,magic_number = nil,game_running=false, game_guess_counter = 0)
+  def initialize(parse,catch_all = nil, word = nil,magic_number = nil,game_running=false, game_guess_counter = 0)
     @parser = parse
     @game_running = game_running
     @guess = parse.guess
     @magic_number = magic_number
     @game_guess_counter = game_guess_counter
     @catch_all = catch_all
+    @word = word
   end
 
   def game_results
@@ -31,14 +32,9 @@ class Machine
   def process_request(counter,hello_counter)
     output = [""]
     case @parser.path
-    # when "/hello"       then output = Responses.hello(hello_counter)
-    #
-    # when "/datetime"    then output = Responses.datetime
-    #
-    # when "/shutdown"    then output = Responses.shutdown(counter)
 
-    when "/word_search" then output = Responses.word_search(@parser.word_param_entry)
-
+    when "/word_search"
+      output = word.process(@parser)
     when "/start_game"
       if @parser.verb == "POST"              # TO DO: define a number to measure against
         ["Good Luck"]
@@ -49,8 +45,7 @@ class Machine
       if @parser.verb == "GET" && @game_running
           game_results + ["Total guesses: #{game_guess_counter}"]
       elsif @parser.verb == "POST" && @game_running
-        # execute redirect back to get game
-          # TO DO: define method for looping back to process_request with new input
+      
       else
         ["Not in game!"]
       end
