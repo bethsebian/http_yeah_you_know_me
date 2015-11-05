@@ -29,7 +29,7 @@ class CatchAllTest < Minitest::Test
     parse = Parser.new(input("/hello"))
     catcher = CatchAll.new(3,4)
     machine = Machine.new(parse,catcher)
-    expected = ["Hello", " World! (4)"] + diagnostics_tester("/hello")
+    expected = ["Hello", " World! (5)"] + diagnostics_tester("/hello")
 
     assert_equal expected, machine.process_request(3,4)
   end
@@ -38,7 +38,7 @@ class CatchAllTest < Minitest::Test
     parse = Parser.new(input("/hello"))
     catcher = CatchAll.new(5,8)
     machine = Machine.new(parse,catcher)
-    expected = ["Hello", " World! (8)"] + diagnostics_tester("/hello")
+    expected = ["Hello", " World! (9)"] + diagnostics_tester("/hello")
 
     assert_equal expected, machine.process_request(5,8)
   end

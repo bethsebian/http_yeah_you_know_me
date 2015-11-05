@@ -1,4 +1,5 @@
 require_relative 'responses'
+require 'pry'
 
 class CatchAll
   include Responses
@@ -13,12 +14,13 @@ class CatchAll
   def process(parse)
     case parse.path
       when "/"            then output = [""]
-      when "/hello"       then output = Responses.hello(hello_counter)
+      when "/hello"
+        self.hello_counter += 1
+        output = Responses.hello(hello_counter)
       when "/datetime"    then output = Responses.datetime
       when "/shutdown"    then output = Responses.shutdown(counter)
     end
   end
-
 
 end
 #

@@ -45,7 +45,7 @@ class Machine
       if @parser.verb == "GET" && @game_running
           game_results + ["Total guesses: #{game_guess_counter}"]
       elsif @parser.verb == "POST" && @game_running
-      
+
       else
         ["Not in game!"]
       end
