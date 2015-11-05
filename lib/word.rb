@@ -1,6 +1,5 @@
 require_relative 'responses'
 
-
 class Word
   include Responses
 
@@ -8,5 +7,5 @@ class Word
     output = Responses.word_search(parse.word_param_entry)
     output + ["\n\n\n"] + parse.diagnostics
   end
-  
+
 end
