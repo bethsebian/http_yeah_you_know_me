@@ -9,6 +9,7 @@ class OutputToClient
   end
 
   def write_request_to_browser(from_machine,status_code)
+    puts "write_request_to_browser occurring"
     if from_machine.nil?
       ["some stuff"]
     else
@@ -16,8 +17,7 @@ class OutputToClient
     end
     output = "<html><head></head><body>#{response}</body></html>"
     if status_code == 303
-      binding.pry
-      headers = ["HTTP/1.1 302 Found\r\nLocation: http://127.0.0.1:9292/game"]
+      headers = ["http/1.1 302 found\r\nlocation: http://127.0.0.1:9292/game\r\n\r\n"].join("\r\n")
     else
       headers = ["http/1.1 200 ok",
               "date: #{Time.now.strftime('%a, %e %b %Y %H:%M:%S %z')}",

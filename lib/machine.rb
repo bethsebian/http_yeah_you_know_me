@@ -5,15 +5,16 @@ require_relative 'responses'
 class Machine
   include Responses
 
-  attr_reader :parser, :game, :guess_verdict, :guess
+  attr_reader :parser, :game, :guess_verdict, :guess, :catch_all
   attr_accessor :magic_number, :game_running
 
-  def initialize(parse,magic_number = nil,game_running=false, game_guess_counter = 0)
+  def initialize(parse,catch_all = nil,magic_number = nil,game_running=false, game_guess_counter = 0)
     @parser = parse
     @game_running = game_running
     @guess = parse.guess
     @magic_number = magic_number
     @game_guess_counter = game_guess_counter
+    @catch_all = catch_all
   end
 
   def game_results
@@ -30,9 +31,12 @@ class Machine
   def process_request(counter,hello_counter)
     output = [""]
     case @parser.path
-    when "/hello"       then output = Responses.hello(hello_counter)
-    when "/datetime"    then output = Responses.datetime
-    when "/shutdown"    then output = Responses.shutdown(counter)
+    # when "/hello"       then output = Responses.hello(hello_counter)
+    #
+    # when "/datetime"    then output = Responses.datetime
+    #
+    # when "/shutdown"    then output = Responses.shutdown(counter)
+
     when "/word_search" then output = Responses.word_search(@parser.word_param_entry)
 
     when "/start_game"
@@ -51,7 +55,7 @@ class Machine
         ["Not in game!"]
       end
     else
-
+      output = catch_all.process(@parser)
     end
     output += ["\n\n\n"] + Responses.root(@parser.diagnostics)
 
